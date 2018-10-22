@@ -1,8 +1,8 @@
 typedef struct
 {
-	int capacity_m; // Розмір блока
-	int size_m;	   // Фактичний розмір стрічки
-	char*  data;	   // Вказівник на блок пам'яті
+    int capacity_m; // Розмір блока
+    int size_m;	   // Фактичний розмір стрічки
+    char*  data;	   // Вказівник на блок пам'яті
 } my_str_t;
 
 int my_str_create(my_str_t* str, int buf_size);
