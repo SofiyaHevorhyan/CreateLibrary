@@ -1,20 +1,31 @@
 #include "lib_for_str.h"
-#include <stdio.h>
 #include <stdlib.h>
+
+//! Обчислює розмір С-стрічки
+//! приймає вказівник на перший символ (назва масиву)
+size_t static len_c_str(const char* cstr) {
+    const char* pstr = cstr;
+    size_t len = 0;
+    while (*pstr++ != '\0') {
+        len++;
+    }
+    return len;
+}
 
 //! Створити стрічку із буфером вказаного розміру. Пам'ять виділяється динамічно.
 //! Варто виділяти buf_size+1 для спрощення роботи my_str_get_cstr().
-int my_str_create(my_str_t* str, int buf_size) {
-    printf("Hello from my_str_create");
-    str->capacity_m = buf_size;
-    str->size_m = 0;
-    str->data = (char*)malloc(sizeof(char) * (buf_size+1));
-    printf("%i %i\n", str->capacity_m, str->size_m);
-    char* data1 = str->data;
-    printf("%p\n", (void*)data1);
-    printf("%p\n", (void*)str->data);
+int my_str_create(my_str_t* str, size_t buf_size) {
 
-    return 0;
+    char* data1 = (char*)malloc(sizeof(char) * (buf_size+1));
+    if (data1) {
+        str->data = data1;
+        printf("%p", (void*) str->data);
+        str->capacity_m = buf_size;
+        str->size_m = 0;
+
+        return 0;
+    }
+    return 1;
 }
 
 //! Створити стрічку із буфером вказаного розміру із переданої С-стрічки.
@@ -22,7 +33,30 @@ int my_str_create(my_str_t* str, int buf_size) {
 //! менший за її розмір -- вважати помилкою.
 //! Пам'ять виділяється динамічно.
 //! 0 -- якщо все ОК, -1 -- недостатній розмір буфера, -2 -- не вдалося виділити пам'ять
-int my_str_from_cstr(my_str_t* str, const char* cstr, int buf_size) {
+int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size) {
+    size_t len = len_c_str(cstr);
+    if (buf_size == 0) {
+        buf_size = len;
+    }
+
+    if (buf_size < len) {
+        return -1;
+    }
+
+    if (my_str_create(str, buf_size) == 1) {
+        return -2;
+    }
+
+
+    else {
+        return my_str_create(str, buf_size);
+    }
+
+    // while there is place in buffer - save element to memory from malloc
+    // if buffer < len(cstr) - -1
+    // if wrong create - -2
+    // everything ok - 0
+
     return 0;
 }
 
@@ -32,30 +66,36 @@ void my_str_free(my_str_t* str){
 }
 
 //! Повертає розмір стрічки:
-int my_str_size(const my_str_t* str) {
+size_t my_str_size(const my_str_t* str) {
     return str->size_m;
 }
 
 //! Повертає розмір буфера:
-int my_str_capacity(const my_str_t* str) {
-    return 0;
+size_t my_str_capacity(const my_str_t* str) {
+    return str->capacity_m;
 }
 
 //! Повертає булеве значення, чи стрічка порожня:
 int my_str_empty(const my_str_t* str) {
-    return 0;
+    if (str->size_m > 0) {
+        return 0;
+    }
+    return 1;
 }
 
 //! Повертає символ у вказаній позиції, або -1, якщо вихід за межі стрічки
 //! Тому, власне, int а не char
-int my_str_getc(const my_str_t* str, int index) {
-    return 0;
+int my_str_getc(const my_str_t* str, size_t index) {
+    if (index < str->size_m) {
+        return (int) *(str->data + index);
+    }
+    return -1;
 }
 
 //! Записує символ у вказану позиції (заміняючи той, що там був),
 //! Повертає 0, якщо позиція в межах стрічки,
 //! Поветає -1, не змінюючи її вмісту, якщо ні.
-int my_str_putc(my_str_t* str, int index, char c) {
+int my_str_putc(my_str_t* str, size_t index, char c) {
     return 0;
 }
 
@@ -86,19 +126,19 @@ void my_str_clear(my_str_t* str) {
 
 //! Вставити символ у стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
-int my_str_insert_c(my_str_t* str, char c, int pos) {
+int my_str_insert_c(my_str_t* str, char c, size_t pos) {
     return 0;
 }
 
 //! Вставити стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
-int my_str_insert(my_str_t* str, const my_str_t* from, int pos) {
+int my_str_insert(my_str_t* str, const my_str_t* from, size_t pos) {
     return 0;
 }
 
 //! Вставити C-стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
-int my_str_insert_cstr(my_str_t* str, const char* from, int pos) {
+int my_str_insert_cstr(my_str_t* str, const char* from, size_t pos) {
     return 0;
 }
 
@@ -125,7 +165,7 @@ int my_str_cmp(my_str_t* str, const char* from) {
 //! Якщо end виходить за межі str -- скопіювати скільки вдасться, не вважати
 //! це помилкою. Якщо ж в ціловій стрічці замало місця, або beg більший
 //! за розмір str -- це помилка. Повернути відповідний код завершення.
-int my_str_substr(const my_str_t* str, char* to, int beg, int end) {
+int my_str_substr(const my_str_t* str, char* to, size_t beg, size_t end) {
     return 0;
 }
 
@@ -141,21 +181,21 @@ const char* my_str_get_cstr(my_str_t* str) {
 //! Знайти першу підстрічку в стрічці, повернути номер її
 //! початку або -1u, якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
-int my_str_find(const my_str_t* str, const my_str_t* tofind, int from) {
+size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from) {
     return 0;
 }
 
 //! Знайти перший символ в стрічці, повернути його номер
 //! або -1u, якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
-int my_str_find_c(const my_str_t* str, char tofind, int from) {
+size_t my_str_find_c(const my_str_t* str, char tofind, size_t from) {
     return 0;
 }
 
 //! Знайти символ в стрічці, для якого передана
 //! функція повернула true, повернути його номер
 //! або -1u, якщо не знайдено:
-int my_str_find_if(const my_str_t* str, int (*predicat)(char)) {
+size_t my_str_find_if(const my_str_t* str, int (*predicat)(char)) {
     return 0;
 }
 
@@ -163,11 +203,11 @@ int my_str_find_if(const my_str_t* str, int (*predicat)(char)) {
 //! якщо сталися помилки. Кінець вводу -- не помилка, однак,
 //! слід не давати читанню вийти за межі буфера!
 //! Рекомендую скористатися fgets().
-int my_str_read_file(my_str_t* str, FILE* file) {
+size_t my_str_read_file(my_str_t* str, FILE* file) {
     return 0;
 }
 
 //! Аналог my_str_read_file, із stdin
-int my_str_read(my_str_t* str) {
+size_t my_str_read(my_str_t* str) {
     return 0;
 }
