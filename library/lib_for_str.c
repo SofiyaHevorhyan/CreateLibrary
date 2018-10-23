@@ -64,6 +64,7 @@ int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size) {
 void my_str_free(my_str_t* str){
     printf("my_str_free");
 }
+        my_str_t str;
 
 //! Повертає розмір стрічки:
 size_t my_str_size(const my_str_t* str) {
@@ -210,4 +211,65 @@ size_t my_str_read_file(my_str_t* str, FILE* file) {
 //! Аналог my_str_read_file, із stdin
 size_t my_str_read(my_str_t* str) {
     return 0;
+}
+//
+//int my_str_read_word(my_str_t* str, FILE* file) {
+//    if (file != NULL)
+//    {
+//        char* c_str[45];
+//        int word_size = fscanf(file, "%s", c_str);
+//        my_str_from_cstr(str, c_str, word_size);
+//        return 0;
+//    }
+//
+//    return -1;
+//}
+//
+//int my_str_sort(my_str_t* str){
+//
+//    int i, key, j;
+//    int size = my_str_size(str);
+//    for (i = 1; i < size; i++)
+//
+//    {
+//
+//        key = my_str_getc(str, i);
+//        j = i-1;
+//
+//        /* Move elements of arr[0..i-1], that are
+//           greater than key, to one position ahead
+//           of their current position */
+//        while (j >= 0 && my_str_getc(str, j) > key)
+//        {
+//            j = j-1;
+//        }
+//        if (i != j++){
+//
+//        }
+//        arr[j+1] = key;
+//    }
+//
+//    return -1;
+//}
+//
+int my_str_reorder(my_str_t* str,int key_take,int key_put){
+    if (key_take == key_put){
+        return 0;
+    }
+    if (key_take < key_put){
+        int key_temp = key_take;
+        key_take = key_put;
+        key_put = key_temp;
+    }
+
+    char value = (char) my_str_getc(&str, key_take);
+    char temp = (char) my_str_getc(&str, key_put);
+
+    for (int i=key_put; i < key_take; i++){
+        char* p1 = str.data + i;
+        *p1 = temp;
+//      дуже кончено, але я хз, як то норм поінтерами робити
+        temp = (char) my_str_getc(&str, i+1);
+
+    }
 }
