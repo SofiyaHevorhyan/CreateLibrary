@@ -59,3 +59,9 @@ size_t my_str_find_if(const my_str_t* str, int (*predicat)(char));
 size_t my_str_read_file(my_str_t* str, FILE* file);
 
 size_t my_str_read(my_str_t* str);
+
+int my_str_reorder(my_str_t str,size_t key_take,size_t key_put);
+
+int my_str_sort(my_str_t* str);
+
+int my_str_read_word(my_str_t *str, FILE *file);
