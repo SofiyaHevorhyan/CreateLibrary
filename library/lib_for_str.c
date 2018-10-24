@@ -251,12 +251,13 @@ size_t my_str_read(my_str_t *str) {
 
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
+//        найдовше слово в англ. мові має 45 букв
         char c_str[45];
         int word_size = fscanf(file, "%s", c_str);
         if (word_size < 1) {
             return -1;
         }
-        my_str_from_cstr(str, c_str, (size_t) word_size);
+        my_str_from_cstr(str, c_str, 0);
         return 0;
     }
 
@@ -277,14 +278,14 @@ int my_str_sort(my_str_t* str){
             j = j-1;
         }
         if (i != j++){
-            my_str_reorder(*str, i, j);
+            my_str_reorder(str, i, j);
         }
     }
 
     return -1;
 }
 
-int my_str_reorder(my_str_t str, size_t key_take, size_t key_put) {
+int my_str_reorder(my_str_t *str, size_t key_take, size_t key_put) {
     if (key_take == key_put) {
         return 0;
     }
@@ -294,15 +295,15 @@ int my_str_reorder(my_str_t str, size_t key_take, size_t key_put) {
         key_put = key_temp;
     }
 
-    char value = *(str.data + key_take);
-    char temp = *(str.data + key_put);
+    char value = *(str->data + key_take);
+    char temp = *(str->data + key_put);
 
-    char *p1 = str.data + key_put;
+    char *p1 = str->data + key_put;
     *p1 = value;
 
     for (size_t i = key_put+1; i <= key_take; i++) {
 
-        p1 = str.data + i;
+        p1 = str->data + i;
         value = *p1;
         *p1 = temp;
        temp = value;

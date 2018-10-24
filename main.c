@@ -28,14 +28,14 @@ int main() {
         printf("%c ", *(ps-1));
     }
     const char* arr = my_str_get_cstr(&str2);
-    printf("\n%c ", *arr);
+    printf("\n%s ", arr);
     size_t size = str2.size_m;
     const char arr1[size];
     //arr1 = arr;
     //printf("%c ", *arr1);
 
-    printf("\n starting test \n");
-    printf("\n prev\n");
+    printf("\nstarting test \n");
+    printf(" prev\n");
     my_str_t test_str;
     const char test_line[] = "symbol";
     my_str_from_cstr(&test_str, test_line, 6);
