@@ -1,4 +1,5 @@
 #include "library/lib_for_str.h"
+//#include "file_read.c"
 
 int main() {
     printf("Hello, World!\n");
@@ -40,10 +41,6 @@ int main() {
     my_str_from_cstr(&test_str, test_line, 6);
     my_str_sort(&test_str);
 //    printf("%s", test_str);
-    char* p_test = test_str.data;
-    while (*p_test++ != '\0') {
-        printf("%c ", *(p_test-1));
-    }
-
+//    read_write("test.txt", "sorted.txt");
     return 0;
 }

@@ -248,114 +248,60 @@ size_t my_str_read(my_str_t *str) {
     return 0;
 }
 
-//
-//int my_str_read_word(my_str_t* str, FILE* file) {
-//    if (file != NULL)
-//    {
-//        char* c_str[45];
-//        int word_size = fscanf(file, "%s", c_str);
-//        my_str_from_cstr(str, c_str, word_size);
-//        return 0;
-//    }
-//
-//    return -1;
-//}
-//
-//int my_str_sort(my_str_t* str){
-//
-//    int i, key, j;
-//    int size = my_str_size(str);
-//    for (i = 1; i < size; i++)
-//
-//    {
-//
-//        key = my_str_getc(str, i);
-//        j = i-1;
-//
-//        /* Move elements of arr[0..i-1], that are
-//           greater than key, to one position ahead
-//           of their current position */
-//        while (j >= 0 && my_str_getc(str, j) > key)
-//        {
-//            j = j-1;
-//        }
-//        if (i != j++){
-//
-//        }
-//        arr[j+1] = key;
-//    }
-//
-//    return -1;
-//}
-//
-//int my_str_reorder(my_str_t* str,int key_take,int key_put){
-//    if (key_take == key_put){
-//=======
-//int my_str_read_word(my_str_t *str, FILE *file) {
-//    if (file != NULL) {
-//        char c_str[45];
-//        size_t word_size = (size_t) fscanf(file, "%s", c_str);
-//        my_str_from_cstr(str, c_str, word_size);
-//        return 0;
-//    }
-//
-//    return -1;
-//}
-//
-//int my_str_sort(my_str_t* str){
-//
-//    int key;
-//    size_t i, j;
-//    size_t size = my_str_size(str);
-//    for (i = 1; i < size; i++)
-//
-//    {
-//
-//        key = my_str_getc(str, i);
-//        j = i-1;
-//
-//        while (j >= 0 && my_str_getc(str, j) > key)
-//        {
-//            j = j-1;
-//        }
-//        if (i != j++){
-//            my_str_reorder(*str, i, j);
-//        }
-//    }
-//
-//    return -1;
-//}
-//
-//int my_str_reorder(my_str_t str, size_t key_take, size_t key_put) {
-//    if (key_take == key_put) {
-//>>>>>>> e3c52bf8713408c96a89eec3982bb1eef26428eb
-//        return 0;
-//    }
-//    if (key_take < key_put) {
-//        size_t key_temp = key_take;
-//        key_take = key_put;
-//        key_put = key_temp;
-//    }
-//
-//    char value = *(str.data + key_take);
-//    char temp = *(str.data + key_put);
-//
-//<<<<<<< HEAD
-//    for (int i=key_put; i < key_take; i++){
-//        char* p1 = str->data + i;
-//        *p1 = temp;
-////      дуже кончено, але я хз, як то норм поінтерами робити
-//        temp = (char) my_str_getc(&str, i+1);
-//=======
-//    char *p1 = str.data + key_put;
-//    *p1 = value;
-//>>>>>>> e3c52bf8713408c96a89eec3982bb1eef26428eb
-//
-//    for (size_t i = key_put+1; i <= key_take; i++) {
-//
-//        p1 = str.data + i;
-//        value = *p1;
-//        *p1 = temp;
-//       temp = value;
-//    }
-//}
+int my_str_read_word(my_str_t *str, FILE *file) {
+    if (file != NULL) {
+        char c_str[45];
+        size_t word_size = (size_t) fscanf(file, "%s", c_str);
+        my_str_from_cstr(str, c_str, word_size);
+        return 0;
+    }
+
+    return -1;
+}
+
+int my_str_sort(my_str_t* str){
+
+    int key;
+    size_t i, j;
+    size_t size = my_str_size(str);
+    for (i = 1; i < size; i++) {
+
+        key = my_str_getc(str, i);
+        j = i-1;
+
+        while (j >= 0 && my_str_getc(str, j) > key) {
+            j = j-1;
+        }
+        if (i != j++){
+            my_str_reorder(*str, i, j);
+        }
+    }
+
+    return -1;
+}
+
+int my_str_reorder(my_str_t str, size_t key_take, size_t key_put) {
+    if (key_take == key_put) {
+        return 0;
+    }
+    if (key_take < key_put) {
+        size_t key_temp = key_take;
+        key_take = key_put;
+        key_put = key_temp;
+    }
+
+    char value = *(str.data + key_take);
+    char temp = *(str.data + key_put);
+
+    char *p1 = str.data + key_put;
+    *p1 = value;
+
+    for (size_t i = key_put+1; i <= key_take; i++) {
+
+        p1 = str.data + i;
+        value = *p1;
+        *p1 = temp;
+       temp = value;
+    }
+    return 0;
+}

@@ -11,7 +11,7 @@ int read_write(const char* file_read,const char* file_write) {
 
     FILE* result = fopen(file_write, "a");
     while (my_str_read_word(&str, file) != -1) {
-        fwrite(result, str);
+        fwrite(&str, 1, my_str_size(&str), result);
         my_str_clear(&str);
     }
     return 0;
