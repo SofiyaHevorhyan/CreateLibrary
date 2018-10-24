@@ -33,5 +33,17 @@ int main() {
     //arr1 = arr;
     //printf("%c ", *arr1);
 
+    printf("\n starting test \n");
+    printf("\n prev\n");
+    my_str_t test_str;
+    const char test_line[] = "symbol";
+    my_str_from_cstr(&test_str, test_line, 6);
+    my_str_sort(&test_str);
+//    printf("%s", test_str);
+    char* p_test = test_str.data;
+    while (*p_test++ != '\0') {
+        printf("%c ", *(p_test-1));
+    }
+
     return 0;
 }

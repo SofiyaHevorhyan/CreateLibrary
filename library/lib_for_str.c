@@ -3,8 +3,8 @@
 
 //! Обчислює розмір С-стрічки
 //! приймає вказівник на перший символ (назва масиву)
-size_t static len_c_str(const char* cstr) {
-    const char* pstr = cstr;
+size_t static len_c_str(const char *cstr) {
+    const char *pstr = cstr;
     size_t len = 0;
     while (*pstr++ != '\0') {
         len++;
@@ -21,9 +21,9 @@ size_t static len_c_str(const char* cstr) {
 
 //! Створити стрічку із буфером вказаного розміру. Пам'ять виділяється динамічно.
 //! Варто виділяти buf_size+1 для спрощення роботи my_str_get_cstr().
-int my_str_create(my_str_t* str, size_t buf_size) {
+int my_str_create(my_str_t *str, size_t buf_size) {
 
-    char* data1 = (char*)malloc(sizeof(char) * (buf_size+1));
+    char *data1 = (char *) malloc(sizeof(char) * (buf_size + 1));
     if (data1) {
         str->data = data1;
         *str->data = '\0';
@@ -40,7 +40,7 @@ int my_str_create(my_str_t* str, size_t buf_size) {
 //! менший за її розмір -- вважати помилкою.
 //! Пам'ять виділяється динамічно.
 //! 0 -- якщо все ОК, -1 -- недостатній розмір буфера, -2 -- не вдалося виділити пам'ять
-int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size) {
+int my_str_from_cstr(my_str_t *str, const char *cstr, size_t buf_size) {
     size_t len = len_c_str(cstr);
     if (buf_size == 0) {
         buf_size = len;
@@ -51,11 +51,11 @@ int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size) {
     }
     int status = my_str_create(str, buf_size);
     if (!status) {
-        const char* ps = cstr;
-        char* pstr = str->data;
+        const char *ps = cstr;
+        char *pstr = str->data;
 
         while (*ps++ != '\0') {
-            *pstr++ = *(ps-1);
+            *pstr++ = *(ps - 1);
             str->size_m++;
         }
         *pstr = '\0';
@@ -66,6 +66,7 @@ int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size) {
 
 
 //! Звільнє пам'ять, знищуючи стрічку:
+
 void my_str_free(my_str_t* str){
     free((void*)str->data);
     // TODO: what happened to str.data?
@@ -74,17 +75,17 @@ void my_str_free(my_str_t* str){
 }
 
 //! Повертає розмір стрічки:
-size_t my_str_size(const my_str_t* str) {
+size_t my_str_size(const my_str_t *str) {
     return str->size_m;
 }
 
 //! Повертає розмір буфера:
-size_t my_str_capacity(const my_str_t* str) {
+size_t my_str_capacity(const my_str_t *str) {
     return str->capacity_m;
 }
 
 //! Повертає булеве значення, чи стрічка порожня:
-int my_str_empty(const my_str_t* str) {
+int my_str_empty(const my_str_t *str) {
     if (str->size_m > 0) {
         return 0;
     }
@@ -94,7 +95,7 @@ int my_str_empty(const my_str_t* str) {
 //! Повертає символ у вказаній позиції, або -1, якщо вихід за межі стрічки
 //! Тому, власне, int а не char
 //! indexes are from 0 to size_m - 1 - others will be interpreted as error
-int my_str_getc(const my_str_t* str, size_t index) {
+int my_str_getc(const my_str_t *str, size_t index) {
     if (0 <= index < str->size_m) {
         return (int) *(str->data + index);
     }
@@ -104,7 +105,7 @@ int my_str_getc(const my_str_t* str, size_t index) {
 //! Записує символ у вказану позиції (заміняючи той, що там був),
 //! Повертає 0, якщо позиція в межах стрічки,
 //! Поветає -1, не змінюючи її вмісту, якщо ні.
-int my_str_putc(my_str_t* str, size_t index, char c) {
+int my_str_putc(my_str_t *str, size_t index, char c) {
     if (0 <= index < str->size_m) {
         *(str->data + index) = c;
         return 0;
@@ -114,13 +115,13 @@ int my_str_putc(my_str_t* str, size_t index, char c) {
 
 //! Додає символ в кінець.
 //! Повертає 0, якщо успішно, -1, якщо буфер закінчився.
-int my_str_pushback(my_str_t* str, char c) {
+int my_str_pushback(my_str_t *str, char c) {
     return 0;
 }
 
 //! Викидає символ з кінця.
 //! Повертає його, якщо успішно, -1, якщо буфер закінчився.
-int my_str_popback(my_str_t* str) {
+int my_str_popback(my_str_t *str) {
     return 0;
 }
 
@@ -135,18 +136,18 @@ int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
     } else {
         my_str_create(to, from->size_m);
     }
-    const char* pfrom = from->data;
-    char* pto = to->data;
+    const char *pfrom = from->data;
+    char *pto = to->data;
 
     while (*pfrom++ != '\0') {
-        *pto++ = *(pfrom-1);
+        *pto++ = *(pfrom - 1);
         to->size_m++;
     }
     *pto = '\0';
-    return 0;
 }
 
 //! Очищає стрічку -- робить її порожньою. Складність має бути О(1).
+
 void my_str_clear(my_str_t* str) {
     *str->data = '\0';
     str->size_m = 0;
@@ -154,38 +155,38 @@ void my_str_clear(my_str_t* str) {
 
 //! Вставити символ у стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
-int my_str_insert_c(my_str_t* str, char c, size_t pos) {
+int my_str_insert_c(my_str_t *str, char c, size_t pos) {
     return 0;
 }
 
 //! Вставити стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
-int my_str_insert(my_str_t* str, const my_str_t* from, size_t pos) {
+int my_str_insert(my_str_t *str, const my_str_t *from, size_t pos) {
     return 0;
 }
 
 //! Вставити C-стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
-int my_str_insert_cstr(my_str_t* str, const char* from, size_t pos) {
+int my_str_insert_cstr(my_str_t *str, const char *from, size_t pos) {
     return 0;
 }
 
 //! Додати стрічку в кінець.
 //! Якщо це неможливо, повертає -1, інакше 0.
-int my_str_append(my_str_t* str, const my_str_t* from) {
+int my_str_append(my_str_t *str, const my_str_t *from) {
     return 0;
 }
 
 //! Додати С-стрічку в кінець.
 //! Якщо це неможливо, повертає -1, інакше 0.
-int my_str_append_cstr(my_str_t* str, const char* from) {
+int my_str_append_cstr(my_str_t *str, const char *from) {
     return 0;
 }
 
 //! Порівняти стрічки, повернути 0, якщо рівні (за вмістом!)
 //! -1, якщо перша менша, 1 -- якщо друга.
 //! Поведінка має бути такою ж, як в strcmp.
-int my_str_cmp(my_str_t* str, const char* from) {
+int my_str_cmp(my_str_t *str, const char *from) {
     return 0;
 }
 
@@ -193,7 +194,7 @@ int my_str_cmp(my_str_t* str, const char* from) {
 //! Якщо end виходить за межі str -- скопіювати скільки вдасться, не вважати
 //! це помилкою. Якщо ж в ціловій стрічці замало місця, або beg більший
 //! за розмір str -- це помилка. Повернути відповідний код завершення.
-int my_str_substr(const my_str_t* str, char* to, size_t beg, size_t end) {
+int my_str_substr(const my_str_t *str, char *to, size_t beg, size_t end) {
     return 0;
 }
 
@@ -211,7 +212,7 @@ const char* my_str_get_cstr(my_str_t* str) {
 //! Знайти першу підстрічку в стрічці, повернути номер її
 //! початку або -1u, якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
-size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from) {
+size_t my_str_find(const my_str_t *str, const my_str_t *tofind, size_t from) {
     return 0;
 }
 
@@ -230,7 +231,7 @@ size_t my_str_find_c(const my_str_t* str, char tofind, size_t from) {
 //! Знайти символ в стрічці, для якого передана
 //! функція повернула true, повернути його номер
 //! або -1u, якщо не знайдено:
-size_t my_str_find_if(const my_str_t* str, int (*predicat)(char)) {
+size_t my_str_find_if(const my_str_t *str, int (*predicat)(char)) {
     return 0;
 }
 
@@ -238,17 +239,14 @@ size_t my_str_find_if(const my_str_t* str, int (*predicat)(char)) {
 //! якщо сталися помилки. Кінець вводу -- не помилка, однак,
 //! слід не давати читанню вийти за межі буфера!
 //! Рекомендую скористатися fgets().
-size_t my_str_read_file(my_str_t* str, FILE* file) {
+size_t my_str_read_file(my_str_t *str, FILE *file) {
     return 0;
 }
 
 //! Аналог my_str_read_file, із stdin
-size_t my_str_read(my_str_t* str) {
+size_t my_str_read(my_str_t *str) {
     return 0;
 }
-
-
-
 
 //
 //int my_str_read_word(my_str_t* str, FILE* file) {
@@ -290,24 +288,74 @@ size_t my_str_read(my_str_t* str) {
 //    return -1;
 //}
 //
-int my_str_reorder(my_str_t* str,int key_take,int key_put){
-    if (key_take == key_put){
-        return 0;
-    }
-    if (key_take < key_put){
-        int key_temp = key_take;
-        key_take = key_put;
-        key_put = key_temp;
-    }
-
-    char value = (char) my_str_getc(&str, key_take);
-    char temp = (char) my_str_getc(&str, key_put);
-
-    for (int i=key_put; i < key_take; i++){
-        char* p1 = str->data + i;
-        *p1 = temp;
-//      дуже кончено, але я хз, як то норм поінтерами робити
-        temp = (char) my_str_getc(&str, i+1);
-
-    }
-}
+//int my_str_reorder(my_str_t* str,int key_take,int key_put){
+//    if (key_take == key_put){
+//=======
+//int my_str_read_word(my_str_t *str, FILE *file) {
+//    if (file != NULL) {
+//        char c_str[45];
+//        size_t word_size = (size_t) fscanf(file, "%s", c_str);
+//        my_str_from_cstr(str, c_str, word_size);
+//        return 0;
+//    }
+//
+//    return -1;
+//}
+//
+//int my_str_sort(my_str_t* str){
+//
+//    int key;
+//    size_t i, j;
+//    size_t size = my_str_size(str);
+//    for (i = 1; i < size; i++)
+//
+//    {
+//
+//        key = my_str_getc(str, i);
+//        j = i-1;
+//
+//        while (j >= 0 && my_str_getc(str, j) > key)
+//        {
+//            j = j-1;
+//        }
+//        if (i != j++){
+//            my_str_reorder(*str, i, j);
+//        }
+//    }
+//
+//    return -1;
+//}
+//
+//int my_str_reorder(my_str_t str, size_t key_take, size_t key_put) {
+//    if (key_take == key_put) {
+//>>>>>>> e3c52bf8713408c96a89eec3982bb1eef26428eb
+//        return 0;
+//    }
+//    if (key_take < key_put) {
+//        size_t key_temp = key_take;
+//        key_take = key_put;
+//        key_put = key_temp;
+//    }
+//
+//    char value = *(str.data + key_take);
+//    char temp = *(str.data + key_put);
+//
+//<<<<<<< HEAD
+//    for (int i=key_put; i < key_take; i++){
+//        char* p1 = str->data + i;
+//        *p1 = temp;
+////      дуже кончено, але я хз, як то норм поінтерами робити
+//        temp = (char) my_str_getc(&str, i+1);
+//=======
+//    char *p1 = str.data + key_put;
+//    *p1 = value;
+//>>>>>>> e3c52bf8713408c96a89eec3982bb1eef26428eb
+//
+//    for (size_t i = key_put+1; i <= key_take; i++) {
+//
+//        p1 = str.data + i;
+//        value = *p1;
+//        *p1 = temp;
+//       temp = value;
+//    }
+//}
