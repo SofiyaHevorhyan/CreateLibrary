@@ -4,6 +4,8 @@ int main() {
     printf("Hello, World!\n");
     my_str_t str;
     my_str_create(&str, 3);
+    my_str_clear(&str);
+    my_str_free(&str);
 
     my_str_t str2;
     const char line[] = "symbol";
@@ -24,6 +26,12 @@ int main() {
     while (*ps++ != '\0') {
         printf("%c ", *(ps-1));
     }
+    const char* arr = my_str_get_cstr(&str2);
+    printf("\n%c ", *arr);
+    size_t size = str2.size_m;
+    const char arr1[size];
+    //arr1 = arr;
+    //printf("%c ", *arr1);
 
     return 0;
 }

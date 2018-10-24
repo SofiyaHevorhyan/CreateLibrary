@@ -12,6 +12,13 @@ size_t static len_c_str(const char* cstr) {
     return len;
 }
 
+//static int* z_function(const char* cstr) {
+//    int arr[10];
+//    printf("hi");
+//    return &arr;
+//}
+
+
 //! Створити стрічку із буфером вказаного розміру. Пам'ять виділяється динамічно.
 //! Варто виділяти buf_size+1 для спрощення роботи my_str_get_cstr().
 int my_str_create(my_str_t* str, size_t buf_size) {
@@ -19,6 +26,7 @@ int my_str_create(my_str_t* str, size_t buf_size) {
     char* data1 = (char*)malloc(sizeof(char) * (buf_size+1));
     if (data1) {
         str->data = data1;
+        *str->data = '\0';
         str->capacity_m = buf_size;
         str->size_m = 0;
 
@@ -59,9 +67,11 @@ int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size) {
 
 //! Звільнє пам'ять, знищуючи стрічку:
 void my_str_free(my_str_t* str){
-    printf("my_str_free");
+    free((void*)str->data);
+    // TODO: what happened to str.data?
+    str->size_m = 0;
+    str->capacity_m = 0;
 }
-        my_str_t str;
 
 //! Повертає розмір стрічки:
 size_t my_str_size(const my_str_t* str) {
@@ -119,12 +129,27 @@ int my_str_popback(my_str_t* str) {
 //! інакше -- із буфером мінімального достатнього розміру.
 //! Старий вміст стрічки перед тим звільняє, за потреби.
 int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
+    // TODO: за потреби звільнити вміст стрічки??
+    if (reserve) {
+        my_str_create(to, from->capacity_m);
+    } else {
+        my_str_create(to, from->size_m);
+    }
+    const char* pfrom = from->data;
+    char* pto = to->data;
+
+    while (*pfrom++ != '\0') {
+        *pto++ = *(pfrom-1);
+        to->size_m++;
+    }
+    *pto = '\0';
     return 0;
 }
 
 //! Очищає стрічку -- робить її порожньою. Складність має бути О(1).
 void my_str_clear(my_str_t* str) {
-    printf("my_str_clear");
+    *str->data = '\0';
+    str->size_m = 0;
 }
 
 //! Вставити символ у стрічку в заданій позиції, змістивши решту символів праворуч.
@@ -178,7 +203,9 @@ int my_str_substr(const my_str_t* str, char* to, size_t beg, size_t end) {
 //! Якщо в буфері було зарезервовано на байт більше за макс. розмір, можна
 //! просто додати нульовий символ в кінці та повернути вказівник data.
 const char* my_str_get_cstr(my_str_t* str) {
-    return str->data;
+    //'\0' вже стоїть в кінці стрічки str->data
+    const char* cstr = str->data;
+    return cstr;
 }
 
 //! Знайти першу підстрічку в стрічці, повернути номер її
@@ -192,6 +219,11 @@ size_t my_str_find(const my_str_t* str, const my_str_t* tofind, size_t from) {
 //! або -1u, якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
 size_t my_str_find_c(const my_str_t* str, char tofind, size_t from) {
+    if (0 <= from < str->size_m) {
+        char* pc = str->data + from;
+        //while (*pc != )
+
+    }
     return 0;
 }
 
@@ -214,6 +246,10 @@ size_t my_str_read_file(my_str_t* str, FILE* file) {
 size_t my_str_read(my_str_t* str) {
     return 0;
 }
+
+
+
+
 //
 //int my_str_read_word(my_str_t* str, FILE* file) {
 //    if (file != NULL)
@@ -268,7 +304,7 @@ int my_str_reorder(my_str_t* str,int key_take,int key_put){
     char temp = (char) my_str_getc(&str, key_put);
 
     for (int i=key_put; i < key_take; i++){
-        char* p1 = str.data + i;
+        char* p1 = str->data + i;
         *p1 = temp;
 //      дуже кончено, але я хз, як то норм поінтерами робити
         temp = (char) my_str_getc(&str, i+1);
