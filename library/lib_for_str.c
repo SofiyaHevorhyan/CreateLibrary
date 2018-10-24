@@ -12,10 +12,23 @@ size_t static len_c_str(const char *cstr) {
     return len;
 }
 
+//
 //static int* z_function(const char* cstr) {
-//    int arr[10];
-//    printf("hi");
-//    return &arr;
+//    // todo: allow fmin?
+//    size_t len = len_c_str(cstr);
+//    int arr[len];
+//    for (int i=1, l=0, r=0; i<len; i++) {
+//        if (i <= r) {
+//            arr[i] = min(r-i+1, arr[i-l]);
+//        }
+//        while (i+arr[i] < len && *(cstr+arr[i]) == *(cstr + i + arr[i])) {
+//            ++arr[i];
+//        }
+//        if (i + arr[i] -1 > r) {
+//            l = i, r = i + arr[i] - 1;
+//        }
+//    }
+//    return 0; //arr;
 //}
 
 
@@ -34,6 +47,7 @@ int my_str_create(my_str_t *str, size_t buf_size) {
     }
     return 1;
 }
+
 
 //! Створити стрічку із буфером вказаного розміру із переданої С-стрічки.
 //! Якщо розмір -- 0, виділяє блок, рівний розміру С-стрічки, якщо
@@ -66,7 +80,6 @@ int my_str_from_cstr(my_str_t *str, const char *cstr, size_t buf_size) {
 
 
 //! Звільнє пам'ять, знищуючи стрічку:
-
 void my_str_free(my_str_t* str){
     free((void*)str->data);
     // TODO: what happened to str.data?
@@ -131,6 +144,7 @@ int my_str_popback(my_str_t *str) {
 //! Старий вміст стрічки перед тим звільняє, за потреби.
 int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
     // TODO: за потреби звільнити вміст стрічки??
+    // todo: return another statement
     if (reserve) {
         my_str_create(to, from->capacity_m);
     } else {
@@ -148,7 +162,6 @@ int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
 }
 
 //! Очищає стрічку -- робить її порожньою. Складність має бути О(1).
-
 void my_str_clear(my_str_t* str) {
     *str->data = '\0';
     str->size_m = 0;
@@ -214,6 +227,13 @@ const char* my_str_get_cstr(my_str_t* str) {
 //! початку або -1u, якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
 size_t my_str_find(const my_str_t *str, const my_str_t *tofind, size_t from) {
+
+    char* pstr = str->data + from;
+
+
+//    while (*pstr != '\0') {
+//    }
+//
     return 0;
 }
 
@@ -223,9 +243,13 @@ size_t my_str_find(const my_str_t *str, const my_str_t *tofind, size_t from) {
 size_t my_str_find_c(const my_str_t* str, char tofind, size_t from) {
     if (0 <= from < str->size_m) {
         char* pc = str->data + from;
-        //while (*pc != )
-
+        while (*pc != '\0') {
+            if (*pc++ == tofind) {
+                return (size_t)(pc-str->data-1);
+            }
+        }
     }
+    // todo: what return??
     return 0;
 }
 
@@ -241,17 +265,19 @@ size_t my_str_find_if(const my_str_t *str, int (*predicat)(char)) {
 //! слід не давати читанню вийти за межі буфера!
 //! Рекомендую скористатися fgets().
 size_t my_str_read_file(my_str_t *str, FILE *file) {
+    // fgets
     return 0;
 }
 
 //! Аналог my_str_read_file, із stdin
 size_t my_str_read(my_str_t *str) {
+    // gets
     return 0;
 }
 
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
-//        найдовше слово в англ. мові має 45 букв
+//      найдовше слово в англ. мові має 45 букв
         char c_str[45];
         int word_size = fscanf(file, "%s", c_str);
         if (word_size < 1) {
