@@ -144,6 +144,7 @@ int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
         to->size_m++;
     }
     *pto = '\0';
+    return 0;
 }
 
 //! Очищає стрічку -- робить її порожньою. Складність має бути О(1).
