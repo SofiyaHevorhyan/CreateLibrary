@@ -1,6 +1,5 @@
 #include "library/lib_for_str.h"
-int read_write(const char* file_read,const char* file_write);
-
+#include "file_read.h"
 
 int main() {
     printf("Hello, World!\n");
@@ -41,8 +40,7 @@ int main() {
     const char test_line[] = "symbol";
     my_str_from_cstr(&test_str, test_line, 6);
     my_str_sort(&test_str);
-    //printf("%s", test_str);
-    read_write("test.txt", "sorted.txt");
-    printf("read_write function was called");
+//    printf("%s", test_str);
+    read_write("C:\\Users\\oksana\\Desktop\\pok\\CreateLibrary\\test.txt", "C:\\Users\\oksana\\Desktop\\pok\\CreateLibrary\\sorted.txt");
     return 0;
 }

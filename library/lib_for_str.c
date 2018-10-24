@@ -252,8 +252,11 @@ size_t my_str_read(my_str_t *str) {
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
         char c_str[45];
-        size_t word_size = (size_t) fscanf(file, "%s", c_str);
-        my_str_from_cstr(str, c_str, word_size);
+        int word_size = fscanf(file, "%s", c_str);
+        if (word_size < 1) {
+            return -1;
+        }
+        my_str_from_cstr(str, c_str, (size_t) word_size);
         return 0;
     }
 

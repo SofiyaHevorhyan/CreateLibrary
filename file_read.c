@@ -11,8 +11,11 @@ int read_write(const char* file_read,const char* file_write) {
 
     FILE* result = fopen(file_write, "a");
     while (my_str_read_word(&str, file) != -1) {
-        fwrite(&str, 1, my_str_size(&str), result);
-        my_str_clear(&str);
+        printf("/more\n");
+        fwrite(&str, my_str_size(&str), 1, result);
+        my_str_free(&str);
     }
+    fclose(file);
+    fclose(result);
     return 0;
 }
