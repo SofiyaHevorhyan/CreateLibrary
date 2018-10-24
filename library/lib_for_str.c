@@ -19,7 +19,6 @@ int my_str_create(my_str_t* str, size_t buf_size) {
     char* data1 = (char*)malloc(sizeof(char) * (buf_size+1));
     if (data1) {
         str->data = data1;
-        printf("%p", (void*) str->data);
         str->capacity_m = buf_size;
         str->size_m = 0;
 
@@ -42,23 +41,21 @@ int my_str_from_cstr(my_str_t* str, const char* cstr, size_t buf_size) {
     if (buf_size < len) {
         return -1;
     }
+    int status = my_str_create(str, buf_size);
+    if (!status) {
+        const char* ps = cstr;
+        char* pstr = str->data;
 
-    if (my_str_create(str, buf_size) == 1) {
-        return -2;
+        while (*ps++ != '\0') {
+            *pstr++ = *(ps-1);
+            str->size_m++;
+        }
+        *pstr = '\0';
+        return 0;
     }
-
-
-    else {
-        return my_str_create(str, buf_size);
-    }
-
-    // while there is place in buffer - save element to memory from malloc
-    // if buffer < len(cstr) - -1
-    // if wrong create - -2
-    // everything ok - 0
-
-    return 0;
+    return -2;
 }
+
 
 //! Звільнє пам'ять, знищуючи стрічку:
 void my_str_free(my_str_t* str){
@@ -86,8 +83,9 @@ int my_str_empty(const my_str_t* str) {
 
 //! Повертає символ у вказаній позиції, або -1, якщо вихід за межі стрічки
 //! Тому, власне, int а не char
+//! indexes are from 0 to size_m - 1 - others will be interpreted as error
 int my_str_getc(const my_str_t* str, size_t index) {
-    if (index < str->size_m) {
+    if (0 <= index < str->size_m) {
         return (int) *(str->data + index);
     }
     return -1;
@@ -97,7 +95,11 @@ int my_str_getc(const my_str_t* str, size_t index) {
 //! Повертає 0, якщо позиція в межах стрічки,
 //! Поветає -1, не змінюючи її вмісту, якщо ні.
 int my_str_putc(my_str_t* str, size_t index, char c) {
-    return 0;
+    if (0 <= index < str->size_m) {
+        *(str->data + index) = c;
+        return 0;
+    }
+    return -1;
 }
 
 //! Додає символ в кінець.
