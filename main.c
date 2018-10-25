@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 
     printf("Recreating string from C string with buffer 6...\n");
     my_str_from_cstr(&str, line, 128);
-    printf("Created string: %s.\n", str.data);
+    printf("Created string: %s\n", str.data);
     if (my_str_empty(&str) == 1) {
         printf("Size of the string is %d, size of the buffer is %d, it is empty: %s.\n", my_str_size(&str),
                my_str_capacity(&str), "yes");
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     printf("Creating a new string...\n");
     my_str_t str2;
     my_str_create(&str2, 128);
-    const char *str2_c = "R love pok";
+    const char *str2_c = "R love POK";
     my_str_from_cstr(&str2, str2_c, 32);
     printf("Created string: %s\n", str2.data);
 
@@ -51,19 +51,19 @@ int main(int argc, char *argv[]) {
 
     printf("Putting char 'I' at the position 0.\n");
     my_str_putc(&str2, 0, 'I');
-    printf("Modified string: %s.\n", str2.data);
+    printf("Modified string: %s\n", str2.data);
 
     printf("Popping last element from string...\n");
     my_str_popback(&str2);
     printf("Modified string: %s\n", str2.data);
 
-    printf("Pushing 'k' to the end of the string...\n");
-    my_str_pushback(&str2, 'k');
+    printf("Pushing 'K' to the end of the string...\n");
+    my_str_pushback(&str2, 'K');
     printf("Modified string: %s\n", str2.data);
 
     my_str_t str3;
     my_str_create(&str3, 30);
-    const char *str3_c = "I do not love pok";
+    const char *str3_c = "I do not love POK";
     my_str_from_cstr(&str3, str3_c, 128);
 
     printf("Copying string with saving buffer size of the copied string...\n");
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
     printf("Appending string to the end of another string...\n");
     my_str_t str4;
     my_str_create(&str4, 3);
-    const char *str4_c = "I am a ba girl. ";
+    const char *str4_c = "I am a BA girl. ";
     my_str_from_cstr(&str4, str4_c, 128);
 
     my_str_append(&str4, &str3);
@@ -87,33 +87,25 @@ int main(int argc, char *argv[]) {
     const char *str6_c = my_str_get_cstr(&str4);
     printf("Getting equal c string: %s\n", str6_c);
 
-    printf("Number of element 'a' in string: %s is %d\n", str4.data, my_str_find_c(&str4, 'a', (size_t) 1));
-
-
-//    size_t index = my_str_find_c(&str2, 'm', 3);
-//    printf("Find the index of 'm' starts from 3: %d\n", index);
-//
-//    my_str_t str3;
-//    my_str_copy(&str2, &str3, 1);
-//    printf("Create a copy of str: %s\n", str3.data);
+    printf("Number of element 'A' in string: '%s' is %d\n", str4.data, my_str_find_c(&str4, 'A', (size_t) 1));
 
     my_str_t str6;
     my_str_create(&str6, 10);
-    const char *test_line = "bagirls";
+    const char *test_line = "BAgirls";
     my_str_from_cstr(&str6, test_line, 7);
 
-    printf("Number of element 'a' in string %s: %d\n\n", str6.data, my_str_find_if(&str6, &compare));
+    printf("Number of element 'A' in string '%s': %d\n\n", str6.data, my_str_find_if(&str6, &compare));
 
     my_str_t str7;
     my_str_create(&str7, 3);
-    my_str_from_cstr(&str7, "ba", 10);
-    printf("Index of the first substring 'ba' in %s: %d\n", str6.data, my_str_find(&str6, &str7, 0));
+    my_str_from_cstr(&str7, "BA", 10);
+    printf("Index of the first substring 'BA' in %s: %d\n", str6.data, my_str_find(&str6, &str7, 0));
 
     my_str_t str8;
     my_str_create(&str8, 10);
 
     my_str_substr(&str7, &str8, 0, 2);
-    printf("Substring of the string 'bagirls' from 0 to 2 is %s.\n", str8.data);
+    printf("Substring of the string 'BAgirls' from 0 to 2 is %s.\n", str8.data);
 
     my_str_t str9;
     my_str_create(&str9, 1024);
@@ -146,17 +138,17 @@ int main(int argc, char *argv[]) {
     my_str_insert(&str13, &str14, -5);
     printf("%s\n", str13.data);
 
-    printf("Inserted C string 'trying to study POK in ' into the position 13 in string '%s': ", str13.data);
+    printf("Inserted C string 'trying to study POK' in into the position 13 in string '%s': ", str13.data);
     my_str_insert_cstr(&str13, "trying to study POK ", 13);
     printf("%s\n", str13.data);
 
     printf("Now run function that uses our library.\n");
     read_write(file_read, file_write);
-    printf("Created by Sofiya, Oksana, Yarka, Anastasia.\n With love <3.");
+    printf("Created by Sofiya, Oksana, Yarka, Anastasia.\nWith love <3.");
     return 0;
 
 }
 
 int static compare(char c) {
-    return c == 'a';
+    return c == 'A';
 }
