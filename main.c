@@ -38,7 +38,7 @@ int main() {
     const char test_line[] = "symbol";
     my_str_from_cstr(&test_str, test_line, 6);
     my_str_sort(&test_str);
-//    printf("%s", test_str);
-    read_write("test.txt", "sorted.txt");
+
+    read_write("test.txt", "../sorted.txt");
     return 0;
 }
