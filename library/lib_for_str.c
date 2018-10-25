@@ -323,13 +323,24 @@ size_t my_str_find_if(const my_str_t *str, int (*predicat)(char)) {
 //! слід не давати читанню вийти за межі буфера!
 //! Рекомендую скористатися fgets().
 size_t my_str_read_file(my_str_t *str, FILE *file) {
-    // fgets
+    if(file == NULL) {
+        return (size_t )-1u;
+    }
+
+    char* arr = str->data;
+    if (fgets(arr, str->capacity_m+1, file) == NULL) {
+        return (size_t)-1u;
+    }
+
+    str->size_m = len_c_str(arr);
     return 0;
 }
 
 //! Аналог my_str_read_file, із stdin
 size_t my_str_read(my_str_t *str) {
-    // gets
+    char a = 'a';
+    char* line = &a;
+    line = gets(line);
     return 0;
 }
 
@@ -340,7 +351,7 @@ size_t my_str_read(my_str_t *str) {
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
         char c_str[1024];
-        int word_size = fscanf(file, "%1023s ", c_str);
+        int word_size = fscanf(file, " %1023s", c_str);
         if (word_size < 1) {
             return -1;
         }
