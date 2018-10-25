@@ -17,24 +17,6 @@ int main() {
     printf("Size: %d, buffer: %d, empty?: %d\n", my_str_size(&str2), my_str_capacity(&str2),
             my_str_empty(&str2));
 
-<<<<<<< HEAD
-    printf("first symbol: %c \n", my_str_getc(&str2, 0));
-    printf("change o to a: ");
-    ps = str2.data;
-    my_str_putc(&str2, 4, 'a');
-    while (*ps++ != '\0') {
-        printf("%c ", *(ps-1));
-    }
-    const char* arr = my_str_get_cstr(&str2);
-    printf("\n%s ", arr);
-    size_t size = str2.size_m;
-    const char arr1[size];
-    //arr1 = arr;
-    //printf("%c ", *arr1);
-
-    printf("\nstarting test \n");
-    printf(" prev\n");
-=======
     printf("First symbol: %c \n", my_str_getc(&str2, 0));
     my_str_putc(&str2, 4, 'm');
     printf("Change o to m: %s\n", str2.data);
@@ -51,13 +33,12 @@ int main() {
 
 
     printf("Starting tests \n");
-    printf("\n prev\n");
->>>>>>> 50561ae53cb233c9a914fd51d798326904c7df1a
+
     my_str_t test_str;
     const char test_line[] = "symbol";
     my_str_from_cstr(&test_str, test_line, 6);
     my_str_sort(&test_str);
 //    printf("%s", test_str);
-    read_write("C:\\Users\\oksana\\Desktop\\pok\\CreateLibrary\\test.txt", "C:\\Users\\oksana\\Desktop\\pok\\CreateLibrary\\sorted.txt");
+    read_write("test.txt", "sorted.txt");
     return 0;
 }
