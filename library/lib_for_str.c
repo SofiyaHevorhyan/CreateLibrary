@@ -12,26 +12,6 @@ size_t static len_c_str(const char *cstr) {
     return len;
 }
 
-//
-//static int* z_function(const char* cstr) {
-//    // todo: allow fmin?
-//    size_t len = len_c_str(cstr);
-//    int arr[len];
-//    for (int i=1, l=0, r=0; i<len; i++) {
-//        if (i <= r) {
-//            arr[i] = min(r-i+1, arr[i-l]);
-//        }
-//        while (i+arr[i] < len && *(cstr+arr[i]) == *(cstr + i + arr[i])) {
-//            ++arr[i];
-//        }
-//        if (i + arr[i] -1 > r) {
-//            l = i, r = i + arr[i] - 1;
-//        }
-//    }
-//    return 0; //arr;
-//}
-
-
 //! Створити стрічку із буфером вказаного розміру. Пам'ять виділяється динамічно.
 //! Варто виділяти buf_size+1 для спрощення роботи my_str_get_cstr().
 int my_str_create(my_str_t *str, size_t buf_size) {
@@ -63,6 +43,7 @@ int my_str_from_cstr(my_str_t *str, const char *cstr, size_t buf_size) {
     if (buf_size < len) {
         return -1;
     }
+    my_str_free(str);
     int status = my_str_create(str, buf_size);
     if (!status) {
         const char *ps = cstr;
@@ -82,7 +63,6 @@ int my_str_from_cstr(my_str_t *str, const char *cstr, size_t buf_size) {
 //! Звільнє пам'ять, знищуючи стрічку:
 void my_str_free(my_str_t* str){
     free((void*)str->data);
-    // TODO: what happened to str.data?
     str->size_m = 0;
     str->capacity_m = 0;
 }
@@ -157,10 +137,21 @@ int my_str_popback(my_str_t *str) {
 int my_str_copy(const my_str_t* from,  my_str_t* to, int reserve) {
     // TODO: за потреби звільнити вміст стрічки??
     // todo: return another statement
-    if (reserve) {
-        my_str_create(to, from->capacity_m);
+    if (reserve || (from->size_m > to->capacity_m)) {
+        my_str_free(to);
+
+        int status = my_str_create(to, from->capacity_m);
+        if (status) {
+            return -1;
+        }
+
     } else {
-        my_str_create(to, from->size_m);
+        if (from->size_m > to->capacity_m) {
+            my_str_free(to);
+            my_str_create(to, from->size_m);
+        }
+        //copy
+
     }
     const char *pfrom = from->data;
     char *pto = to->data;
@@ -263,6 +254,15 @@ const char* my_str_get_cstr(my_str_t* str) {
 size_t my_str_find(const my_str_t *str, const my_str_t *tofind, size_t from) {
 
     char* pstr = str->data + from;
+    char* pfind = tofind->data;
+    char* pfirst_str;
+
+    while (*pstr != '\0') {
+        if (*pstr != *pfind) {
+            pstr = my_str_find_c(&str, )
+            pfirst_str = pstr;
+        }
+    }
 
 
 //    while (*pstr != '\0') {
@@ -283,15 +283,21 @@ size_t my_str_find_c(const my_str_t* str, char tofind, size_t from) {
             }
         }
     }
-    // todo: what return??
-    return 0;
+    return (size_t)(-1u);
 }
 
 //! Знайти символ в стрічці, для якого передана
 //! функція повернула true, повернути його номер
 //! або -1u, якщо не знайдено:
 size_t my_str_find_if(const my_str_t *str, int (*predicat)(char)) {
-    return 0;
+    char *pointer = str->data;
+    while (*pointer != '\0') {
+        if (predicat(*pointer) == 1) {
+            return (size_t) (pointer - str->data);
+        }
+        pointer += 1;
+    }
+    return (size_t) -1;
 }
 
 //! Прочитати стрічку із файлу. Повернути, 0, якщо успішно, -1,
