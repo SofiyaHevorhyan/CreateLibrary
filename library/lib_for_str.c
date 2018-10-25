@@ -219,6 +219,23 @@ int my_str_append_cstr(my_str_t *str, const char *from) {
 //! -1, якщо перша менша, 1 -- якщо друга.
 //! Поведінка має бути такою ж, як в strcmp.
 int my_str_cmp(my_str_t *str, const char *from) {
+    size_t len = len_c_str(from);
+
+    char* pstr = str->data;
+    const char* pfrom = from;
+
+    while (*pstr++ != '\0' || *pfrom++ != '\0') {
+        if (*(pstr-1) > *(pfrom-1)) {
+            return 1;
+        } else if (*(pstr-1) < *(pfrom-1)) {
+            return -1;
+        }
+    }
+    if (str->size_m > len) {
+        return 1;
+    } else if (str->size_m < len) {
+        return -1;
+    }
     return 0;
 }
 
