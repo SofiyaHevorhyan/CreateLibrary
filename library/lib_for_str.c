@@ -79,10 +79,7 @@ size_t my_str_capacity(const my_str_t *str) {
 
 //! Повертає булеве значення, чи стрічка порожня:
 int my_str_empty(const my_str_t *str) {
-    if (str->size_m > 0) {
-        return 0;
-    }
-    return 1;
+    return (str->size_m < 1);
 }
 
 //! Повертає символ у вказаній позиції, або -1, якщо вихід за межі стрічки
@@ -324,11 +321,14 @@ size_t my_str_read(my_str_t *str) {
     return 0;
 }
 
+//! зчитує 1 слово з файла у стрічку (до 1023 символів)
+//! якщо переданого файлу не існує або
+//! прочитане слово пусте, повертає -1
+//! при успішній операції повертає 0
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
-//      найдовше слово в англ. мові має 45 букв
-        char c_str[45];
-        int word_size = fscanf(file, "%44s ", c_str);
+        char c_str[1024];
+        int word_size = fscanf(file, "%1023s ", c_str);
         if (word_size < 1) {
             return -1;
         }
@@ -339,7 +339,8 @@ int my_str_read_word(my_str_t *str, FILE *file) {
     return -1;
 }
 
-int my_str_sort(my_str_t* str){
+//! сортує стрічку по символах
+void my_str_sort(my_str_t* str){
 
     int key;
     size_t i, j;
@@ -356,18 +357,19 @@ int my_str_sort(my_str_t* str){
             my_str_reorder(str, i, j);
         }
     }
-
-    return -1;
 }
 
+//! тут все складно
+//! бере символ з kye_take, вставляє на key_put, і зміщує
+//! всі значення з key_put по (ket_take - 1) на 1 комірку
+//! впрово. якщо key_put > key_take повертає -1.
+//! при успішності операції повертає 0.
 int my_str_reorder(my_str_t *str, size_t key_take, size_t key_put) {
     if (key_take == key_put) {
         return 0;
     }
-    if (key_take < key_put) {
-        size_t key_temp = key_take;
-        key_take = key_put;
-        key_put = key_temp;
+    if ((key_take < key_put) || (key_put < 0) || (key_take >= str->size_m)){
+        return -1;
     }
 
     char value = *(str->data + key_take);
