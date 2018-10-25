@@ -219,6 +219,23 @@ int my_str_append_cstr(my_str_t *str, const char *from) {
 //! -1, якщо перша менша, 1 -- якщо друга.
 //! Поведінка має бути такою ж, як в strcmp.
 int my_str_cmp(my_str_t *str, const char *from) {
+    size_t len = len_c_str(from);
+
+    char* pstr = str->data;
+    const char* pfrom = from;
+
+    while (*pstr++ != '\0' || *pfrom++ != '\0') {
+        if (*(pstr-1) > *(pfrom-1)) {
+            return 1;
+        } else if (*(pstr-1) < *(pfrom-1)) {
+            return -1;
+        }
+    }
+    if (str->size_m > len) {
+        return 1;
+    } else if (str->size_m < len) {
+        return -1;
+    }
     return 0;
 }
 
@@ -326,14 +343,22 @@ size_t my_str_find_if(const my_str_t *str, int (*predicat)(char)) {
 //! слід не давати читанню вийти за межі буфера!
 //! Рекомендую скористатися fgets().
 size_t my_str_read_file(my_str_t *str, FILE *file) {
-    // fgets
+    if(file == NULL) {
+        return (size_t )-1u;
+    }
+
+    char* arr = str->data;
+    if (fgets(arr, str->capacity_m+1, file) == NULL) {
+        return (size_t)-1u;
+    }
+
+    str->size_m = len_c_str(arr);
     return 0;
 }
 
 //! Аналог my_str_read_file, із stdin
 size_t my_str_read(my_str_t *str) {
-    // gets
-    return 0;
+    return my_str_read_file(str, stdin);
 }
 
 //! зчитує 1 слово з файла у стрічку (до 1023 символів)
@@ -344,14 +369,13 @@ size_t my_str_read(my_str_t *str) {
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
         char c_str[1024];
-        int word_size = fscanf(file, "%1023s ", c_str);
+        int word_size = fscanf(file, " %1023s ", c_str);
         if (word_size < 1) {
             return -1;
         }
         my_str_from_cstr(str, c_str, 0);
         return 0;
     }
-
     return -1;
 }
 
