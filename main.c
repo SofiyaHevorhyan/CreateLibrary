@@ -90,6 +90,13 @@ int main(int argc, char *argv[]) {
     printf("Number of element 'a' in string: %s is %d\n", str4.data, my_str_find_c(&str4, 'a', (size_t) 1));
 
 
+//    size_t index = my_str_find_c(&str2, 'm', 3);
+//    printf("Find the index of 'm' starts from 3: %d\n", index);
+//
+//    my_str_t str3;
+//    my_str_copy(&str2, &str3, 1);
+//    printf("Create a copy of str: %s\n", str3.data);
+
     my_str_t str6;
     my_str_create(&str6, 10);
     const char *test_line = "bagirls";
@@ -147,6 +154,7 @@ int main(int argc, char *argv[]) {
     read_write(file_read, file_write);
     printf("Created by Sofiya, Oksana, Yarka, Anastasia.\n With love <3.");
     return 0;
+
 }
 
 int static compare(char c) {

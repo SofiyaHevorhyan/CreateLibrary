@@ -216,6 +216,7 @@ int my_str_insert_cstr(my_str_t *str, const char *from, size_t pos) {
     }
     return -1;
 }
+
 //! Додати стрічку в кінець.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_append(my_str_t *str, const my_str_t *from) {
