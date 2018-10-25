@@ -166,7 +166,20 @@ void my_str_clear(my_str_t *str) {
 //! Вставити символ у стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_insert_c(my_str_t *str, char c, size_t pos) {
-    return 0;
+    if (str->size_m < str->capacity_m){
+
+        char* p = str->data + pos;
+        char x1 = c, x2 = *p;
+
+        while(p <= str->data + str->size_m){
+            *p  = x1;
+            x1 = x2;
+            x2 = *(++p);
+        }
+        *p = '\0';
+        return 0;
+    }
+    return -1;
 }
 
 //! Вставити стрічку в заданій позиції, змістивши решту символів праворуч.
