@@ -313,7 +313,7 @@ int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
 //      найдовше слово в англ. мові має 45 букв
         char c_str[45];
-        int word_size = fscanf(file, "%s", c_str);
+        int word_size = fscanf(file, "%44s ", c_str);
         if (word_size < 1) {
             return -1;
         }
