@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
     printf("Number of element 'a' in string %s: %d", str6.data, my_str_find_if(&str6, &compare));
 
     read_write(file_read, file_write);
+
     return 0;
 }
 
