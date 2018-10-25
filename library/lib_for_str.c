@@ -166,6 +166,8 @@ void my_str_clear(my_str_t *str) {
 //! Вставити символ у стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_insert_c(my_str_t *str, char c, size_t pos) {
+    if (pos > str->size_m) { pos = str->size_m; }
+
     if (str->size_m < str->capacity_m){
 
         char* p = str->data + pos;
@@ -194,6 +196,8 @@ int my_str_insert(my_str_t *str, const my_str_t *from, size_t pos) {
         for (size_t i = 0; i < from->size_m; i++) {
             *(str->data + pos + i) = *(from->data + i);
         }
+
+        str->size_m += from->size_m;
         return 0;
     }
     return -1;
@@ -212,6 +216,7 @@ int my_str_insert_cstr(my_str_t *str, const char *from, size_t pos) {
         for (size_t i = 0; i < size_from; i++) {
             *(str->data + pos + i) = *(from + i);
         }
+        str->size_m += size_from;
         return 0;
     }
     return -1;
