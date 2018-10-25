@@ -175,7 +175,18 @@ int my_str_insert(my_str_t *str, const my_str_t *from, size_t pos) {
 //! Вставити C-стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_insert_cstr(my_str_t *str, const char *from, size_t pos) {
+    size_t size_from = len_c_str(from);
+    if (pos > str->size_m) { pos = str->size_m; }
+    if (size_from + str->size_m < str->capacity_m) {
+        for (size_t i = str->size_m + size_from; i >= pos + size_from; i--) {
+            *(str->data + i) = *(str->data + i - size_from);
+        }
+        for (size_t i = 0; i < size_from; i++) {
+            *(str->data + pos + i) = *(from + i);
+        }
     return 0;
+    }
+    return -1;
 }
 
 //! Додати стрічку в кінець.
