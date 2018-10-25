@@ -166,21 +166,56 @@ void my_str_clear(my_str_t *str) {
 //! Вставити символ у стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_insert_c(my_str_t *str, char c, size_t pos) {
-    return 0;
+    if (str->size_m < str->capacity_m){
+
+        char* p = str->data + pos;
+        char x1 = c, x2 = *p;
+
+        while(p <= str->data + str->size_m){
+            *p  = x1;
+            x1 = x2;
+            x2 = *(++p);
+        }
+        *p = '\0';
+        return 0;
+    }
+    return -1;
 }
 
 //! Вставити стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_insert(my_str_t *str, const my_str_t *from, size_t pos) {
-    return 0;
+    if (pos > str->size_m) { pos = str->size_m; }
+
+    if (from->size_m + str->size_m < str->capacity_m) {
+        for (size_t i = str->size_m + from->size_m + 1; i >= pos + from->size_m; i--) {
+            *(str->data + i) = *(str->data + i - from->size_m);
+        }
+        for (size_t i = 0; i < from->size_m; i++) {
+            *(str->data + pos + i) = *(from->data + i);
+        }
+        return 0;
+    }
+    return -1;
 }
 
 //! Вставити C-стрічку в заданій позиції, змістивши решту символів праворуч.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_insert_cstr(my_str_t *str, const char *from, size_t pos) {
-    return 0;
-}
+    size_t size_from = len_c_str(from);
+    if (pos > str->size_m) { pos = str->size_m; }
 
+    if (size_from + str->size_m <= str->capacity_m) {
+        for (size_t i = str->size_m + 2*size_from; i >= pos + size_from; i--) {
+            *(str->data + i) = *(str->data + i - size_from);
+        }
+        for (size_t i = 0; i < size_from; i++) {
+            *(str->data + pos + i) = *(from + i);
+        }
+        return 0;
+    }
+    return -1;
+}
 //! Додати стрічку в кінець.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_append(my_str_t *str, const my_str_t *from) {
@@ -365,7 +400,6 @@ size_t my_str_read(my_str_t *str) {
 //! якщо переданого файлу не існує або
 //! прочитане слово пусте, повертає -1
 //! при успішній операції повертає 0
-
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
         char c_str[1024];
