@@ -12,7 +12,7 @@ int read_write(const char* file_read,const char* file_write) {
     while (my_str_read_word(&str, file) != -1) {
         my_str_sort(&str);
         fwrite(my_str_get_cstr(&str), my_str_size(&str), 1, result);
-        fwrite(" ", 1, 1, result);
+        fwrite(" ", my_str_size(&str), 1, result);
         my_str_free(&str);
     }
     fclose(file);
