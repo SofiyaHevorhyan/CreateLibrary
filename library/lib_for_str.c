@@ -223,7 +223,19 @@ int my_str_cmp(my_str_t *str, const char *from) {
 //! Якщо end виходить за межі str -- скопіювати скільки вдасться, не вважати
 //! це помилкою. Якщо ж в ціловій стрічці замало місця, або beg більший
 //! за розмір str -- це помилка. Повернути відповідний код завершення.
-int my_str_substr(const my_str_t *str, char *to, size_t beg, size_t end) {
+int my_str_substr(const my_str_t *str, my_str_t *to, size_t beg, size_t end) {
+    if (((end - beg) > to->capacity_m) || (beg > str->size_m)) {
+        return -1;
+    }
+    to->size_m = 0;
+    for (size_t i = beg; i < end; i++) {
+        *(to->data + i - beg) = *(str->data + i);
+        to->size_m++;
+        if (*(str->data + i) == '\0') {
+            return 0;
+        }
+    }
+    *(to->data + end - beg) = '\0';
     return 0;
 }
 
