@@ -129,15 +129,15 @@ int main(int argc, char *argv[]) {
 
     my_str_t str13;
     my_str_create(&str13, 1024);
-    const char str13_c[128] = "BA girls";
+    const char str13_c[128] = "BA girl";
     my_str_from_cstr(&str13, str13_c, 128);
 
     printf("Strings %s and %s are equal: %d.\n\n", str13.data, str13_c, my_str_cmp(&str13, str13_c));
-    printf("Inserted '.' into the position 16 in string %s: ", str13.data);
-    my_str_insert_c(&str13, '.', 16);
+    printf("Inserted 's' into the position 16 in string '%s': ", str13.data);
+    my_str_insert_c(&str13, 's', 16);
     printf("%s\n", str13.data);
 
-    printf("Inserted ' are here' into the position -5 in string %s: ", str13.data);
+    printf("Inserted ' are here' into the position -5 in string '%s': ", str13.data);
     my_str_t str14;
     my_str_create(&str14, 1024);
     const char *str14_c = " are here";
@@ -146,8 +146,8 @@ int main(int argc, char *argv[]) {
     my_str_insert(&str13, &str14, -5);
     printf("%s\n", str13.data);
 
-    printf("Inserted C string 'trying to study POK in ' into the position 13 in string %s: ", str13.data);
-    my_str_insert_cstr(&str13, "trying to study POK in ", 13);
+    printf("Inserted C string 'trying to study POK in ' into the position 13 in string '%s': ", str13.data);
+    my_str_insert_cstr(&str13, "trying to study POK ", 13);
     printf("%s\n", str13.data);
 
     printf("Now run function that uses our library.\n");

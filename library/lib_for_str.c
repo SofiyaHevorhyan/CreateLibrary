@@ -179,6 +179,7 @@ int my_str_insert_c(my_str_t *str, char c, size_t pos) {
             x2 = *(++p);
         }
         *p = '\0';
+        str->size_m += 1;
         return 0;
     }
     return -1;
@@ -189,7 +190,7 @@ int my_str_insert_c(my_str_t *str, char c, size_t pos) {
 int my_str_insert(my_str_t *str, const my_str_t *from, size_t pos) {
     if (pos > str->size_m) { pos = str->size_m; }
 
-    if (from->size_m + str->size_m < str->capacity_m) {
+    if (from->size_m + str->size_m <= str->capacity_m) {
         for (size_t i = str->size_m + from->size_m + 1; i >= pos + from->size_m; i--) {
             *(str->data + i) = *(str->data + i - from->size_m);
         }
