@@ -129,13 +129,25 @@ int my_str_putc(my_str_t *str, size_t index, char c) {
 //! Додає символ в кінець.
 //! Повертає 0, якщо успішно, -1, якщо буфер закінчився.
 int my_str_pushback(my_str_t *str, char c) {
-    return 0;
+    if (str->size_m < str->capacity_m){
+        *(str->data + str->size_m) = c;
+        *(str->data + str->size_m + 1) = '\0';
+        str->size_m++;
+        return 0;
+    }
+    return -1;
 }
 
 //! Викидає символ з кінця.
 //! Повертає його, якщо успішно, -1, якщо буфер закінчився.
 int my_str_popback(my_str_t *str) {
-    return 0;
+    // TODO: коли -1 повертає? якщо стрічка пуста і немає, що видаляти чи що?
+    if (str->size_m > 0){
+        *(str->data + str->size_m-1) = '\0';
+        str->size_m--;
+        return 0;
+    }
+    return -1;
 }
 
 //! Копіює стрічку. Якщо reserve == true,
@@ -188,13 +200,35 @@ int my_str_insert_cstr(my_str_t *str, const char *from, size_t pos) {
 //! Додати стрічку в кінець.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_append(my_str_t *str, const my_str_t *from) {
-    return 0;
+    if (str->size_m + from->size_m < str->capacity_m){
+        char* pstr = str->data + str->size_m;
+        const char* pfrom = from->data;
+
+        while (*pfrom++ != '\0'){
+            *pstr++ = *(pfrom-1);
+            str->size_m++;
+        }
+        *pstr = '\0';
+        return 0;
+    }
+    return -1;
 }
 
 //! Додати С-стрічку в кінець.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_append_cstr(my_str_t *str, const char *from) {
-    return 0;
+    if (str->size_m + len_c_str(from) < str->capacity_m){
+        char* pstr = str->data +str->size_m;
+        const char* pfrom = from;
+
+        while (*pfrom++ != '\0'){
+            *pstr++ = *(pfrom-1);
+        }
+        str->size_m += len_c_str(from);
+        *pstr = '\0';
+        return 0;
+    }
+    return -1;
 }
 
 //! Порівняти стрічки, повернути 0, якщо рівні (за вмістом!)
