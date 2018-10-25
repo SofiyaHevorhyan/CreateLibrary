@@ -90,31 +90,31 @@ int main(int argc, char *argv[]) {
     printf("Number of element 's' in string %s is %d\n", str4.data, my_str_find_c(&str4, 's', (size_t) 1));
 
 
-//    size_t index = my_str_find_c(&str2, 'm', 3);
-//    printf("Find the index of 'm' starts from 3: %d\n", index);
-//
-//    my_str_t str3;
-//    my_str_copy(&str2, &str3, 1);
-//    printf("Create a copy of str: %s\n", str3.data);
-
     my_str_t str6;
     my_str_create(&str6, 10);
     const char *test_line = "bagirls";
     my_str_from_cstr(&str6, test_line, 7);
 
-    printf("Number of element 'a' in string %s: %d", str6.data, my_str_find_if(&str6, &compare));
-
+    printf("Number of element 'a' in string %s: %d\n", str6.data, my_str_find_if(&str6, &compare));
 
     my_str_t str7;
     my_str_create(&str7, 10);
-    my_str_from_cstr(&str7, "kar", 100);
+    my_str_from_cstr(&str7, "bagirlsbagirls", 100);
 
     my_str_t str8;
     my_str_create(&str8, 3);
-    my_str_from_cstr(&str8, "klrsdgs", 10);
+    my_str_from_cstr(&str8, "ba", 10);
+    printf("Index of the first substring 'ba' in %s: %d\n", str7.data, my_str_find(&str7, &str8, 0));
 
+    my_str_t str9;
+    my_str_create(&str9, 10);
+    my_str_from_cstr(&str9, "bagirls", 10);
 
-    printf("num: %d\n", my_str_find(&str7, &str8, 0));
+    my_str_t str10;
+    my_str_create(&str10, 10);
+
+    my_str_substr(&str9, &str10, 0, 2);
+    printf("Substring of the string 'bagirls' from 0 to 2 is %s\n", str10.data);
 
     read_write(file_read, file_write);
     return 0;

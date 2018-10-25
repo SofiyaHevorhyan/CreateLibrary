@@ -340,22 +340,19 @@ size_t my_str_read(my_str_t *str) {
 //! якщо переданого файлу не існує або
 //! прочитане слово пусте, повертає -1
 //! при успішній операції повертає 0
+
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
-        int my_str_read_word(my_str_t *str, FILE *file) {
-            if (file != NULL) {
-                char c_str[1024];
-                int word_size = fscanf(file, "%1023s ", c_str);
-                if (word_size < 1) {
-                    return -1;
-                }
-                my_str_from_cstr(str, c_str, 0);
-                return 0;
-            }
-
+        char c_str[1024];
+        int word_size = fscanf(file, "%1023s ", c_str);
+        if (word_size < 1) {
             return -1;
         }
+        my_str_from_cstr(str, c_str, 0);
+        return 0;
     }
+
+    return -1;
 }
 
 
