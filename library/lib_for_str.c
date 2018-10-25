@@ -121,11 +121,11 @@ int my_str_pushback(my_str_t *str, char c) {
 //! Викидає символ з кінця.
 //! Повертає його, якщо успішно, -1, якщо буфер закінчився.
 int my_str_popback(my_str_t *str) {
-    // TODO: коли -1 повертає? якщо стрічка пуста і немає, що видаляти чи що?
     if (str->size_m > 0) {
+        char last = *(str->data + str->size_m - 1);
         *(str->data + str->size_m - 1) = '\0';
         str->size_m--;
-        return 0;
+        return (int) last;
     }
     return -1;
 }
@@ -135,24 +135,17 @@ int my_str_popback(my_str_t *str) {
 //! інакше -- із буфером мінімального достатнього розміру.
 //! Старий вміст стрічки перед тим звільняє, за потреби.
 int my_str_copy(const my_str_t *from, my_str_t *to, int reserve) {
-    // TODO: за потреби звільнити вміст стрічки??
-    // todo: return another statement
-    if (reserve || (from->size_m > to->capacity_m)) {
-        my_str_free(to);
+    if (from->capacity_m != to->capacity_m) {
+        if (reserve || (from->size_m > to->capacity_m)) {
 
-        int status = my_str_create(to, from->capacity_m);
-        if (status) {
-            return -1;
-        }
-        
-    } else {
-        if (from->size_m > to->capacity_m) {
             my_str_free(to);
-            my_str_create(to, from->size_m);
+            int status = my_str_create(to, from->capacity_m);
+            if (status) {
+                return -1;
+            }
         }
-        //copy
-
     }
+
     const char *pfrom = from->data;
     char *pto = to->data;
 
@@ -191,7 +184,7 @@ int my_str_insert_cstr(my_str_t *str, const char *from, size_t pos) {
 //! Додати стрічку в кінець.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_append(my_str_t *str, const my_str_t *from) {
-    if (str->size_m + from->size_m < str->capacity_m) {
+    if (str->size_m + from->size_m <= str->capacity_m) {
         char *pstr = str->data + str->size_m;
         const char *pfrom = from->data;
 
@@ -208,7 +201,7 @@ int my_str_append(my_str_t *str, const my_str_t *from) {
 //! Додати С-стрічку в кінець.
 //! Якщо це неможливо, повертає -1, інакше 0.
 int my_str_append_cstr(my_str_t *str, const char *from) {
-    if (str->size_m + len_c_str(from) < str->capacity_m) {
+    if (str->size_m + len_c_str(from) <= str->capacity_m) {
         char *pstr = str->data + str->size_m;
         const char *pfrom = from;
 
@@ -233,7 +226,19 @@ int my_str_cmp(my_str_t *str, const char *from) {
 //! Якщо end виходить за межі str -- скопіювати скільки вдасться, не вважати
 //! це помилкою. Якщо ж в ціловій стрічці замало місця, або beg більший
 //! за розмір str -- це помилка. Повернути відповідний код завершення.
-int my_str_substr(const my_str_t *str, char *to, size_t beg, size_t end) {
+int my_str_substr(const my_str_t *str, my_str_t *to, size_t beg, size_t end) {
+    if (((end - beg) > to->capacity_m) || (beg > str->size_m)) {
+        return -1;
+    }
+    to->size_m = 0;
+    for (size_t i = beg; i < end; i++) {
+        *(to->data + i - beg) = *(str->data + i);
+        to->size_m++;
+        if (*(str->data + i) == '\0') {
+            return 0;
+        }
+    }
+    *(to->data + end - beg) = '\0';
     return 0;
 }
 
@@ -251,25 +256,41 @@ const char *my_str_get_cstr(my_str_t *str) {
 //! Знайти першу підстрічку в стрічці, повернути номер її
 //! початку або -1u, якщо не знайдено. from -- місце, з якого починати шукати.
 //! Якщо більше за розмір -- вважати, що не знайдено.
-//size_t my_str_find(const my_str_t *str, const my_str_t *tofind, size_t from) {
-//
-//    char* pstr = str->data + from;
-//    char* pfind = tofind->data;
-//    char* pfirst_str;
-//
-//    while (*pstr != '\0') {
-//        if (*pstr != *pfind) {
-//            pstr = my_str_find_c(&str, )
-//            pfirst_str = pstr;
-//        }
-//    }
-//
-//
-////    while (*pstr != '\0') {
-////    }
-////
-//    return 0;
-//}
+size_t my_str_find(const my_str_t *str, const my_str_t *tofind, size_t from) {
+
+    // if second line is longer
+    if (str->size_m < tofind->size_m) {
+        return (size_t) -1u;
+    }
+
+    char *pstr = str->data + from, *pfirst = str->data + from;
+    char *pfind = tofind->data;
+
+    while (*pstr++ != '\0') {
+
+        // if symbol matches
+        if (*(pstr - 1) == *pfind) {
+
+            // the end of tofind line + adding 1 to pfind anyway
+            if (*(++pfind) == '\0') {
+                return pfirst - str->data;
+            }
+
+            // if we have to find new symbol in str that matches first of tofind->data
+        } else {
+            pfind = tofind->data;
+
+            // find the next beginning
+            size_t status = my_str_find_c(str, *tofind->data, pfirst - str->data + 1);
+            if (status == ((size_t) -1u)) {
+                return (size_t) -1u;
+            }
+            pfirst = str->data + status;
+            pstr = pfirst;
+        }
+    }
+    return (size_t) -1u;
+}
 
 //! Знайти перший символ в стрічці, повернути його номер
 //! або -1u, якщо не знайдено. from -- місце, з якого починати шукати.
@@ -315,22 +336,31 @@ size_t my_str_read(my_str_t *str) {
     return 0;
 }
 
+//! зчитує 1 слово з файла у стрічку (до 1023 символів)
+//! якщо переданого файлу не існує або
+//! прочитане слово пусте, повертає -1
+//! при успішній операції повертає 0
 int my_str_read_word(my_str_t *str, FILE *file) {
     if (file != NULL) {
-//      найдовше слово в англ. мові має 45 букв
-        char c_str[45];
-        int word_size = fscanf(file, "%44s ", c_str);
-        if (word_size < 1) {
+        int my_str_read_word(my_str_t *str, FILE *file) {
+            if (file != NULL) {
+                char c_str[1024];
+                int word_size = fscanf(file, "%1023s ", c_str);
+                if (word_size < 1) {
+                    return -1;
+                }
+                my_str_from_cstr(str, c_str, 0);
+                return 0;
+            }
+
             return -1;
         }
-        my_str_from_cstr(str, c_str, 0);
-        return 0;
     }
-
-    return -1;
 }
 
-int my_str_sort(my_str_t *str) {
+
+//! сортує стрічку по символах
+void my_str_sort(my_str_t *str) {
 
     int key;
     size_t i, j;
@@ -347,18 +377,19 @@ int my_str_sort(my_str_t *str) {
             my_str_reorder(str, i, j);
         }
     }
-
-    return -1;
 }
 
+//! тут все складно
+//! бере символ з kye_take, вставляє на key_put, і зміщує
+//! всі значення з key_put по (ket_take - 1) на 1 комірку
+//! впрово. якщо key_put > key_take повертає -1.
+//! при успішності операції повертає 0.
 int my_str_reorder(my_str_t *str, size_t key_take, size_t key_put) {
     if (key_take == key_put) {
         return 0;
     }
-    if (key_take < key_put) {
-        size_t key_temp = key_take;
-        key_take = key_put;
-        key_put = key_temp;
+    if ((key_take < key_put) || (key_put < 0) || (key_take >= str->size_m)) {
+        return -1;
     }
 
     char value = *(str->data + key_take);

@@ -9,6 +9,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+
     char *file_read = argv[1];
     char *file_write = argv[2];
     printf("Program starts!\n");
@@ -103,9 +104,21 @@ int main(int argc, char *argv[]) {
 
     printf("Number of element 'a' in string %s: %d", str6.data, my_str_find_if(&str6, &compare));
 
-    read_write(file_read, file_write);
 
+    my_str_t str7;
+    my_str_create(&str7, 10);
+    my_str_from_cstr(&str7, "kar", 100);
+
+    my_str_t str8;
+    my_str_create(&str8, 3);
+    my_str_from_cstr(&str8, "klrsdgs", 10);
+
+
+    printf("num: %d\n", my_str_find(&str7, &str8, 0));
+
+    read_write(file_read, file_write);
     return 0;
+
 }
 
 int static compare(char c) {

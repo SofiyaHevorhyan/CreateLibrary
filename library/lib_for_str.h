@@ -46,7 +46,7 @@ int my_str_append_cstr(my_str_t* str, const char* from);
 
 int my_str_cmp(my_str_t* str, const char* from);
 
-int my_str_substr(const my_str_t* str, char* to, size_t beg, size_t end);
+int my_str_substr(const my_str_t* str, my_str_t *to, size_t beg, size_t end);
 
 const char* my_str_get_cstr(my_str_t* str);
 
@@ -62,6 +62,6 @@ size_t my_str_read(my_str_t* str);
 
 int my_str_reorder(my_str_t *str,size_t key_take,size_t key_put);
 
-int my_str_sort(my_str_t* str);
+void my_str_sort(my_str_t* str);
 
 int my_str_read_word(my_str_t *str, FILE *file);
