@@ -39,6 +39,18 @@ int main() {
     my_str_from_cstr(&test_str, test_line, 6);
     my_str_sort(&test_str);
 
-    read_write("../test.txt", "../sorted.txt");
+    //read_write("../test.txt", "../sorted.txt");
+
+    my_str_t str4;
+    my_str_create(&str4, 10);
+    my_str_from_cstr(&str4, "kar", 100);
+
+    my_str_t str5;
+    my_str_create(&str5, 3);
+    my_str_from_cstr(&str5, "klrsdgs", 10);
+
+
+    printf("num: %d\n", my_str_find(&str4, &str5, 0));
+
     return 0;
 }
