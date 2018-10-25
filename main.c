@@ -117,6 +117,7 @@ int main(int argc, char *argv[]) {
     printf("num: %d\n", my_str_find(&str7, &str8, 0));
 
     read_write(file_read, file_write);
+
     return 0;
 
 }

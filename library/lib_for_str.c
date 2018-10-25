@@ -187,7 +187,7 @@ int my_str_insert_cstr(my_str_t *str, const char *from, size_t pos) {
         for (size_t i = 0; i < size_from; i++) {
             *(str->data + pos + i) = *(from + i);
         }
-    return 0;
+        return 0;
     }
     return -1;
 }
@@ -233,14 +233,16 @@ int my_str_cmp(my_str_t *str, const char *from) {
     size_t len = len_c_str(from);
 
     char* pstr = str->data;
+    int i = 0;
     const char* pfrom = from;
 
-    while (*pstr++ != '\0' || *pfrom++ != '\0') {
-        if (*(pstr-1) > *(pfrom-1)) {
+    while ((*pstr++ != '\0') || (from[i] != '\0')) {
+        if (*(pstr-1) > from[i]) {
             return 1;
-        } else if (*(pstr-1) < *(pfrom-1)) {
+        } else if (*(pstr-1) < from[i]) {
             return -1;
         }
+        i++;
     }
     if (str->size_m > len) {
         return 1;
